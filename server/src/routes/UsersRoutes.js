@@ -1,6 +1,6 @@
 const express = require('express');
 const { celebrate, Segments, Joi } = require('celebrate');
-const verify = require('../util/verifyToken');
+const verify = require('../middleware/verifyToken');
 
 const UsersController = require('../controllers/UsersController');
 
