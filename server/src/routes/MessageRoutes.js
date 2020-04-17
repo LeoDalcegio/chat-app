@@ -4,37 +4,51 @@ const verify = require('../middleware/verifyToken');
 
 const MessageController = require('../controllers/MessageController');
 
-const roomRoutes = express.Router();
+const messageRoutes = express.Router();
 
-roomRoutes.get('/', RoomController.index);
-
-roomRoutes.get('/:id',celebrate({[Segments.PARAMS]: Joi.object({
-    id: Joi.string().required()}),}), 
-    RoomController.show
-);
-
-roomRoutes.post('/:id', celebrate({[Segments.BODY]: Joi.object({
-    name: Joi.string()
-        .min(6)
+messageRoutes.get('/', celebrate({[Segments.BODY]: Joi.object({
+    room: Joi.string()
         .required(),
     }),}), 
-    verify,
-    RoomController.store        
+    MessageController.index
 );
 
-roomRoutes.put('/:id', celebrate({[Segments.BODY]: Joi.object({
-    name: Joi.string()
-        .min(6)
+messageRoutes.get('/:id',celebrate({[Segments.PARAMS]: Joi.object({
+    id: Joi.string()
         .required(),
     }),}), 
+    MessageController.show
+);
+ 
+messageRoutes.post('/', celebrate({[Segments.BODY]: Joi.object({
+    content: Joi.string()
+        .required(),
+    room: Joi.string()
+        .required(),
+    user: Joi.string()
+        .required()
+    }),}), 
     verify,
-    RoomController.update        
+    MessageController.store        
 );
 
-roomRoutes.delete('/:id', celebrate({[Segments.PARAMS]: Joi.object({
+messageRoutes.put('/:id', celebrate({[Segments.BODY]: Joi.object({
+    content: Joi.string()
+        .min(6)
+        .required(),
+    room: Joi.string()
+        .required(),
+    user: Joi.string()
+        .required()
+    }),}), 
+    verify,
+    MessageController.update        
+);
+
+messageRoutes.delete('/:id', celebrate({[Segments.PARAMS]: Joi.object({
     id: Joi.string().required()}),}), 
     verify, 
-    RoomController.destroy
+    MessageController.destroy
 );
 
-module.exports = userRoutes;
+module.exports = messageRoutes;

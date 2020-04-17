@@ -2,7 +2,7 @@ const mongoose = require('mongoose');
 const mongoosePaginate = require('mongoose-paginate');
 
 const MessageSchema = mongoose.Schema({
-    message: {
+    content: {
         type: String,
         required: true,
         min: 6,

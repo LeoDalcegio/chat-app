@@ -1,47 +1,60 @@
 const Room = require('../models/Room');
 
 module.exports = {
-    async store(req, res){
-        const { user_id } = req.headers;
-        const { spot_id } = req.params;
-        const { date } = req.body;
+    async addUserToRoom(request, response){
+        const { user_id } = request.body;
+        const { name } = request.body;
+        let room;
 
-        const booking = await Booking.create({
-            user: user_id,
-            spot: spot_id,
-            date,
-        });
+        const roomExist = await Room.findOne({ name });
         
-        await booking.populate('spot').populate('user').execPopulate();
+        if(roomExist){
+            const { participants } = roomExist;
 
-        const ownerSocket = req.connectedUsers[booking.spot.user];
+            participants = [...participants, user_id]
 
-        if(ownerSocket){
-            req.io.to(ownerSocket).emit('booking_request', booking);
+            roomExist.participants = removeDuplicates(participants)
+         
+            room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
+        }else{
+
+            room = await Room.create({
+                participants: user_id,
+                name 
+            });
         }
 
-        return res.json(booking);
+        await room.populate('participants').execPopulate();
+
+        return response.json(room);
+    },
+
+    async removeUserFromRoom(request, response){
+        const { user_id } = request.body;
+        const { name } = request.body;
+
+        let room;
+
+        request.body.participants = [...new Set(request.body.participants)];
+
+        const data = {
+            participants: [...participants, participants],
+            name
+        }
+        
+        room = await Room.findByIdAndUpdate(roomExist._id, data, { new: true });
+
+        return response.json(room);
     },
     
     async index(request, response){
-        const { page = 1 } = request.query;
-        
-        const rooms = await Room.paginate({ }, { 
-            page, 
-            limit: 10 
-        });
-        
-        return response.json(rooms);
-    },
-    
-    async show(request, response){
-        const room = await Room.findById(request.params.id);
+        const { name } = request.body;
 
-        if(!room) 
-            return response.status(404).send({error: 'Room not found'});
+        const room = await Room.findOne({ name });        
         
         return response.json(room);
     },
+    
 
     async destroy(request, response) {
         const { id } = request.params;
@@ -57,7 +70,11 @@ module.exports = {
 
     async update(request, response){
         try{
+            request.body.participants = [...new Set(request.body.participants)];
+
             const room = await Room.findByIdAndUpdate(request.params.id, request.body, { new: true });
+            
+            await room.populate('participants').execPopulate();
             
             return response.json(room);
         }catch(err){

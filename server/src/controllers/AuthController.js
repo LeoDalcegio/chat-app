@@ -22,8 +22,10 @@ module.exports = {
             });
 
             user.password = undefined;
-            
-            return response.header('auth-token', token).send(user);
+
+            response.setHeader('authorization', token);
+
+            return response.status(200).send(user);
         }catch(err){
             return response.status(401).send(err);
         }
@@ -33,7 +35,7 @@ module.exports = {
         const { email } = request.body;
 
         const emailExist = await User.findOne({ email })
-    
+        
         if(emailExist) return response.status(409).send({error: 'Email already exist'});
     
         const hashPassword = await passwordValidation.encrypt(request.body.password);
@@ -75,7 +77,7 @@ module.exports = {
                     passwordResetExpires: nowPlusOneHour
                 }
             });
-
+                
             mailer.sendMail({
                 to: email,
                 from: 'leoodalcegio@hotmail.com',

@@ -6,26 +6,37 @@ const RoomController = require('../controllers/RoomController');
 
 const roomRoutes = express.Router();
 
-roomRoutes.get('/', RoomController.index);
-
-roomRoutes.get('/:id',celebrate({[Segments.PARAMS]: Joi.object({
-    id: Joi.string().required()}),}), 
-    RoomController.show
+roomRoutes.get('/', celebrate({[Segments.BODY]: Joi.object({
+    name: Joi.string()})
+    ,}), 
+    RoomController.index
 );
 
-roomRoutes.post('/:id', celebrate({[Segments.BODY]: Joi.object({
+roomRoutes.post('/add-user', celebrate({[Segments.BODY]: Joi.object({
     name: Joi.string()
-        .min(6)
+        .required(),
+    user_id: Joi.string()
         .required(),
     }),}), 
     verify,
-    RoomController.store        
+    RoomController.addUserToRoom        
+);
+
+roomRoutes.post('/remove-user', celebrate({[Segments.BODY]: Joi.object({
+    name: Joi.string()
+        .required(),
+    user_id: Joi.string()
+        .required(),
+    }),}), 
+    verify,
+    RoomController.removeUserFromRoom        
 );
 
 roomRoutes.put('/:id', celebrate({[Segments.BODY]: Joi.object({
     name: Joi.string()
-        .min(6)
         .required(),
+    participants: Joi.array()
+        .required()
     }),}), 
     verify,
     RoomController.update        
@@ -37,4 +48,4 @@ roomRoutes.delete('/:id', celebrate({[Segments.PARAMS]: Joi.object({
     RoomController.destroy
 );
 
-module.exports = userRoutes;
+module.exports = roomRoutes;

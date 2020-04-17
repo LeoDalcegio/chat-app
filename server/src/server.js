@@ -8,6 +8,8 @@ const http = require('http');
 
 const UsersRoutes = require('./routes/UsersRoutes');
 const AuthRoutes = require('./routes/AuthRoutes');
+const RoomRoutes = require('./routes/RoomRoutes');
+const MessageRoutes = require('./routes/MessageRoutes');
 
 const { addUser, removeUser, getUser, getUsersInRoom } = require('./util/users');
 
@@ -26,11 +28,19 @@ const PORT = process.env.PORT || 5000
 const server = http.createServer(app);
 const io = socketio(server); 
 
-app.use(cors());
+
+const corsOptions = {
+    exposedHeaders: 'authorization',
+  };
+  
+app.use(cors(corsOptions));
+
 app.use(express.json());
 
 app.use('/api/users',UsersRoutes)
 app.use('/api/users/auth',AuthRoutes)
+app.use('/api/messages',MessageRoutes)
+app.use('/api/rooms',RoomRoutes)
 app.use(errors());
 
 io.on('connection', (socket) => {

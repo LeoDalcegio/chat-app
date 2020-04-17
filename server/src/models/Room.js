@@ -9,7 +9,7 @@ const RoomSchema = mongoose.Schema({
         max: 255
     },
     participants: [{ 
-		type: ObjectId,
+		type: mongoose.Schema.Types.ObjectId,
 		ref: 'User'
 	}]
 },{

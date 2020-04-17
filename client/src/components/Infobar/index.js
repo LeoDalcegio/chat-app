@@ -1,10 +1,19 @@
 import React from 'react';
 import './styles.css';
+import { Link } from 'react-router-dom';
 
 import closeIcon from '../../icons/closeIcon.png';
 import onlineIcon from '../../icons/onlineIcon.png';
 
 export default function InfoBar({ room }){
+    
+    const handleLogout = () => {
+        localStorage.removeItem('user_id');
+        localStorage.removeItem('user_name');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('user_email');
+    }
+
     return (
         <div className="info-bar">
             <div className="left-inner-container">
@@ -13,7 +22,9 @@ export default function InfoBar({ room }){
                 <h3> {room} </h3>
             </div>
             
-            <a href="/"><img src={closeIcon} alt="close"/></a>
+            <Link to="/">
+                <a onClick={handleLogout} href="#"><img src={closeIcon} alt="close"/></a>
+            </Link>
         </div>
     )
 }
