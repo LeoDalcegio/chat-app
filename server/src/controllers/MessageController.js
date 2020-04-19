@@ -23,7 +23,7 @@ module.exports = {
             room,       
         }, { 
             page, 
-            limit: 10 
+            limit: 20 
         });
         
         return response.json(messages);

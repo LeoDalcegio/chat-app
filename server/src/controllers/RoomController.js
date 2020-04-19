@@ -1,5 +1,7 @@
 const Room = require('../models/Room');
 
+const removeDuplicatesFromArray = require('../util/removeDuplicatesFromArray');
+
 module.exports = {
     async addUserToRoom(request, response){
         const { user_id } = request.body;
@@ -9,11 +11,11 @@ module.exports = {
         const roomExist = await Room.findOne({ name });
         
         if(roomExist){
-            const { participants } = roomExist;
+            let { participants } = roomExist;
 
             participants = [...participants, user_id]
 
-            roomExist.participants = removeDuplicates(participants)
+            roomExist.participants = removeDuplicatesFromArray(participants)
          
             room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
         }else{
