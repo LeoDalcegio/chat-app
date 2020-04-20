@@ -38,20 +38,23 @@ module.exports = {
         const roomExist = await Room.findOne({ name: roomName });
         
         if(roomExist){
-            let { participants } = roomExist;
+            const index = roomExist.participants.indexOf(user_id);
 
-            participants = [...participants, user_id]
+            if (index > -1) {
+                roomExist.participants.splice(index, 1);
 
-            roomExist.participants = removeDuplicatesFromArray(participants)
-         
-            const room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
+                const room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
 
-            await room.populate('participants').execPopulate();
+                await room.populate('participants').execPopulate();
 
-            return response.json(room);
-        }else{
-            return response.send({ error: 'Room doesn`t exist'})
+                return response.json(room);
+            }
+
+            return response.send({ error: 'Invalid user'})
         }
+
+        return response.send({ error: 'Room doesn`t exist'})
+
     },
     
     async index(request, response){
@@ -61,7 +64,6 @@ module.exports = {
         
         return response.json(room);
     },
-    
 
     async destroy(request, response) {
         const { id } = request.params;
