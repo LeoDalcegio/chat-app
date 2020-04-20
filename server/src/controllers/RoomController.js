@@ -33,20 +33,25 @@ module.exports = {
 
     async removeUserFromRoom(request, response){
         const { user_id } = request.body;
-        const { name } = request.body;
+        const { roomName } = request.body;
 
-        let room;
-
-        request.body.participants = [...new Set(request.body.participants)];
-
-        const data = {
-            participants: [...participants, participants],
-            name
-        }
+        const roomExist = await Room.findOne({ name: roomName });
         
-        room = await Room.findByIdAndUpdate(roomExist._id, data, { new: true });
+        if(roomExist){
+            let { participants } = roomExist;
 
-        return response.json(room);
+            participants = [...participants, user_id]
+
+            roomExist.participants = removeDuplicatesFromArray(participants)
+         
+            const room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
+
+            await room.populate('participants').execPopulate();
+
+            return response.json(room);
+        }else{
+            return response.send({ error: 'Room doesn`t exist'})
+        }
     },
     
     async index(request, response){
