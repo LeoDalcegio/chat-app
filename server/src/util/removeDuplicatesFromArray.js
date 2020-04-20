@@ -1,5 +1,7 @@
 const removeDuplicatesFromArray = (array) => {
-    return array.filter((a, b) => array.indexOf(a) === b)
+    const uniqueSet = new Set(array);
+
+    return [...uniqueSet];
 };
 
 module.exports = removeDuplicatesFromArray;

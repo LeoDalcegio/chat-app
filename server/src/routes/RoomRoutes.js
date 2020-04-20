@@ -13,7 +13,7 @@ roomRoutes.get('/', celebrate({[Segments.BODY]: Joi.object({
 );
 
 roomRoutes.post('/add-user', celebrate({[Segments.BODY]: Joi.object({
-    name: Joi.string()
+    roomName: Joi.string()
         .required(),
     user_id: Joi.string()
         .required(),
@@ -23,7 +23,7 @@ roomRoutes.post('/add-user', celebrate({[Segments.BODY]: Joi.object({
 );
 
 roomRoutes.post('/remove-user', celebrate({[Segments.BODY]: Joi.object({
-    name: Joi.string()
+    roomName: Joi.string()
         .required(),
     user_id: Joi.string()
         .required(),

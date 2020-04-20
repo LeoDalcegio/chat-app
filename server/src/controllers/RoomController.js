@@ -5,10 +5,10 @@ const removeDuplicatesFromArray = require('../util/removeDuplicatesFromArray');
 module.exports = {
     async addUserToRoom(request, response){
         const { user_id } = request.body;
-        const { name } = request.body;
+        const { roomName } = request.body;
         let room;
 
-        const roomExist = await Room.findOne({ name });
+        const roomExist = await Room.findOne({ name: roomName });
         
         if(roomExist){
             let { participants } = roomExist;
