@@ -33,8 +33,7 @@ export default function Login({ history }) {
             localStorage.setItem('authorization', authorization);
             localStorage.setItem('user_email', email);
 
-            // faz login e coloca o email lá
-            history.push(`/chat?name=${email}&room=${room}`)
+            history.push(`/chat?name=${name}&room=${room}`)
         }
     }
     

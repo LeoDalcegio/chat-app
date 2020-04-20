@@ -22,12 +22,12 @@ module.exports = {
 
             room = await Room.create({
                 participants: user_id,
-                name 
+                roomName 
             });
         }
 
         await room.populate('participants').execPopulate();
-
+        
         return response.json(room);
     },
 

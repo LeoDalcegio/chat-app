@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import queryString from 'query-string';
 import io from 'socket.io-client';
+import api from '../../services/api';
 import './styles.css';
 
 import Infobar from '../../components/Infobar';
@@ -12,6 +13,7 @@ let socket;
 export default function Chat({ location }) {
     const [name, setName] = useState('');
     const [room, setRoom] = useState('');
+    const [participants, setParticipants] = useState([]);
     const [message, setMessage] = useState('');
     const [messages, setMessages] = useState([]);
 
@@ -30,6 +32,19 @@ export default function Chat({ location }) {
                 alert(error);
             }
         });
+
+        const addUserToRoom = async () => {
+            const userId = localStorage.getItem('user_id');
+
+            const response = await api.post('/rooms/add-user', {
+                roomName: room,
+                user_id: userId
+            });
+
+            setParticipants(response.content.participants);
+        }
+
+        addUserToRoom();
 
         return () => {
             socket.emit('disconnect');
