@@ -6,7 +6,7 @@ const MessageController = require('../controllers/MessageController');
 
 const messageRoutes = express.Router();
 
-messageRoutes.get('/', celebrate({[Segments.BODY]: Joi.object({
+messageRoutes.get('/', celebrate({[Segments.QUERY]: Joi.object({
     room: Joi.string()
         .required(),
     }),}), 

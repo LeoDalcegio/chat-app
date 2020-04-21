@@ -13,16 +13,14 @@ module.exports = {
         if(roomExist){
             let { participants } = roomExist;
 
-            participants = [...participants, user_id]
-
-            roomExist.participants = removeDuplicatesFromArray(participants)
-         
+            if(!participants.includes(user_id))
+                participants = [...participants, user_id]
+            
             room = await Room.findByIdAndUpdate(roomExist._id, roomExist, { new: true });
         }else{
-
             room = await Room.create({
                 participants: user_id,
-                roomName 
+                name: roomName 
             });
         }
 
@@ -79,7 +77,7 @@ module.exports = {
 
     async update(request, response){
         try{
-            request.body.participants = [...new Set(request.body.participants)];
+            request.body.participants = removeDuplicatesFromArray(request.body.participants)
 
             const room = await Room.findByIdAndUpdate(request.params.id, request.body, { new: true });
             

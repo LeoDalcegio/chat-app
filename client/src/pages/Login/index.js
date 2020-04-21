@@ -20,7 +20,6 @@ export default function Login({ history }) {
             });
 
             if(response.status !== 200){
-                
                 return;
             }
 

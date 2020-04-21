@@ -31,7 +31,7 @@ const io = socketio(server);
 
 const corsOptions = {
     exposedHeaders: 'authorization',
-  };
+};
   
 app.use(cors(corsOptions));
 

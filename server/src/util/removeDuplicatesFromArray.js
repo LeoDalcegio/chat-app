@@ -1,7 +1,5 @@
 const removeDuplicatesFromArray = (array) => {
-    const uniqueSet = new Set(array);
-
-    return [...uniqueSet];
+    return array.splice(0, array.length, ...(new Set(array)))
 };
 
 module.exports = removeDuplicatesFromArray;

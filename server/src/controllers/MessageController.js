@@ -16,16 +16,14 @@ module.exports = {
     },
     
     async index(request, response){
-        const { page = 1 } = request.query;
-        const { room } = request.body;
+        const { room } = request.query;
         
-        const messages = await Message.paginate({ 
+        const messages = await Message.find({ 
             room,       
-        }, { 
-            page, 
-            limit: 20 
-        });
-        
+        })
+        .populate('user')
+        .exec();
+
         return response.json(messages);
     },
     
